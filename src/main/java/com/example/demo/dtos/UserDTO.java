@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+
     @NotBlank(message = "El nombre no puede estar vacío")
     String name;
     @Email(message =  "El mail no debe estar vacío")

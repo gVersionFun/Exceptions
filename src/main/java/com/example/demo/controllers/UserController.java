@@ -29,8 +29,8 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO) {
          User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        userService.createUser(user);
-        return new ResponseEntity<>("Usuario creado en Mongo", HttpStatus.CREATED);
+
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
 
 
