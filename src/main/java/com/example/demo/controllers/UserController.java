@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/flights")
+@RequestMapping("/api/v1/user")
 @Validated
 public class UserController {
     private UserService  userService;
@@ -25,7 +25,7 @@ public class UserController {
 
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO) {
          User user = new User();
         BeanUtils.copyProperties(userDTO, user);

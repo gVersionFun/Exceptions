@@ -6,4 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface MongoUserRepo extends MongoRepository<User, Long> {
 
 
+
+
 }

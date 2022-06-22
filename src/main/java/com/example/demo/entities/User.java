@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Setter
 public class User{
     @Id
-    long id;
+    Long id;
     String name;
     String mail;
 
