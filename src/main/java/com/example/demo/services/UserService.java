@@ -6,13 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
 @Service
 public class UserService {
     private UserRepo userRepo;
     private MongoUserRepo mongoUserRepo;
 
-   //Inyección de dependencias por constructor
-    public UserService(UserRepo userRepo, MongoUserRepo mongoUserRepo){
+    //Inyección de dependencias por constructor
+    public UserService(UserRepo userRepo, MongoUserRepo mongoUserRepo) {
         this.userRepo = userRepo;
         this.mongoUserRepo = mongoUserRepo;
 
@@ -20,39 +21,70 @@ public class UserService {
 
     public String createUser(User user) {
         writeOnFile();
-        if(userRepo.findUserByMail(user.getMail()) == null) {
+        if (userRepo.findUserByMail(user.getMail()) == null) {
             mongoUserRepo.save(user);
             notifyBySlack();
             postOnQueue();
             return "Creado en Mongo";
-        }else {
+        } else {
             sendEmail();
             return "Ya existe el usuario";
         }
+    }
+
+
+    public void notifyBySlack() {
+        if (!connectionWithSlack()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error de conexión con Slack");
+        } else {
+            System.out.println("Se notifico por Slack");
+
+        }
+    }
+
+    public void postOnQueue() {
+        if (!connectionWithQueue()) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error de conexión con el sistema externo");
+        } else {
+            System.out.println("Se agregó el mensaje a la cola");
+
+        }
+    }
+
+    public void sendEmail() {
+        if (!connectionSendEmail()) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error de conexión con el servicio de Email");
+        } else {
+            //en caso de escribir mal el mail, el servicio debería retornar un 400
+            if (!verificationSendEmail()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email incorrecto");
+            } else {
+                System.out.println("Se envió el mail a no-response@exceptionexample.com");
+            }
         }
 
 
-
-     public void notifyBySlack(){
-        //Siempre entrará
-         //throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error de conexión con Slack");
-         System.out.println("hola");
-     }
-
-    public void postOnQueue(){
-        System.out.println("Se añadió a la cola");;
     }
 
-    public void sendEmail(){
-        System.out.println("Se envió el mail a no-response@exceptionexample.com");
-    }
-
-    public void writeOnFile(){
+    public void writeOnFile() {
         System.out.println("Se escribió la operación");
     }
 
+    public boolean connectionWithSlack() {
+        return true;
+    }
 
+    public boolean connectionWithQueue() {
+        return true;
+    }
 
+    public boolean connectionSendEmail() {
+        return true;
+    }
 
+    public boolean verificationSendEmail() {
+        return true;
+    }
 }
+
 
