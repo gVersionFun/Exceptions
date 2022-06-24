@@ -3,7 +3,7 @@ import com.example.demo.entities.User;
 import com.example.demo.repositories.MongoUserRepo;
 import com.example.demo.repositories.UserRepo;
 import com.example.demo.services.userException.ConnectEmailException;
-import com.example.demo.services.userException.ConnectWithSlackExcption;
+import com.example.demo.services.userException.ConnectWithSlackException;
 import com.example.demo.services.userException.EmailNotFoundException;
 import com.example.demo.services.userException.SendToQueueException;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class UserService {
 
     public void notifyBySlack() {
         if (!connectionWithSlack()) {
-            throw new ConnectWithSlackExcption("Error de conexión con Slack");
+            throw new ConnectWithSlackException("Error de conexión con Slack");
         } else {
             System.out.println("Se notifico por Slack");
 
@@ -88,7 +88,7 @@ public class UserService {
     }
 
     public boolean verificationSendEmail() {
-        return true;
+        return false;
     }
 }
 

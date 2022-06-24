@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.ConnectException;
 
-
+    @RestControllerAdvice
     public class RepoExceptions {
 
         @ExceptionHandler(ConnectException.class)
