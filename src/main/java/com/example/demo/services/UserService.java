@@ -2,9 +2,14 @@ package com.example.demo.services;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.MongoUserRepo;
 import com.example.demo.repositories.UserRepo;
-import org.springframework.http.HttpStatus;
+import com.example.demo.services.userException.ConnectEmailException;
+import com.example.demo.services.userException.ConnectWithSlackExcption;
+import com.example.demo.services.userException.EmailNotFoundException;
+import com.example.demo.services.userException.SendToQueueException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
+
+
 
 
 @Service
@@ -35,7 +40,7 @@ public class UserService {
 
     public void notifyBySlack() {
         if (!connectionWithSlack()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error de conexión con Slack");
+            throw new ConnectWithSlackExcption("Error de conexión con Slack");
         } else {
             System.out.println("Se notifico por Slack");
 
@@ -44,7 +49,7 @@ public class UserService {
 
     public void postOnQueue() {
         if (!connectionWithQueue()) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error de conexión con el sistema externo");
+            throw new SendToQueueException("Error de conexión con el sistema externo");
         } else {
             System.out.println("Se agregó el mensaje a la cola");
 
@@ -53,11 +58,11 @@ public class UserService {
 
     public void sendEmail() {
         if (!connectionSendEmail()) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error de conexión con el servicio de Email");
+            throw new ConnectEmailException("Error de conexión con el servicio de Email");
         } else {
             //en caso de escribir mal el mail, el servicio debería retornar un 400
             if (!verificationSendEmail()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email incorrecto");
+                throw new EmailNotFoundException("Email incorrecto");
             } else {
                 System.out.println("Se envió el mail a no-response@exceptionexample.com");
             }
